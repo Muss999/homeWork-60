@@ -1,10 +1,17 @@
+import type { TypeMessage } from "../../helpers/types";
 import MessageCard from "../MessageCard/MessageCard";
 import "./MessagesList.css";
 
-const MessagesList = () => {
+interface Props {
+    messages: TypeMessage[];
+}
+
+const MessagesList = ({ messages }: Props) => {
     return (
         <div className="messages-div">
-            <MessageCard />
+            {messages.map((message) => {
+                return <MessageCard key={message._id} message={message} />;
+            })}
         </div>
     );
 };
