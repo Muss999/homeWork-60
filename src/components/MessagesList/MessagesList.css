@@ -1,0 +1,7 @@
+.messages-div {
+    margin-top: 20px;
+    margin-bottom: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
