@@ -7,6 +7,7 @@ import type { TypeMessage } from "./helpers/types";
 
 const messagesApi: string = "http://146.185.154.90:8000/messages";
 let lastDateTime: string = "";
+let isActivePreloader = true;
 
 const App = () => {
     const [messages, setMessages] = useState<TypeMessage[]>([]);
@@ -23,6 +24,7 @@ const App = () => {
                 if (result.length > 0) {
                     lastDateTime = result[29].datetime;
                 }
+                isActivePreloader = false;
                 scrollToBottom();
             }
         };
@@ -75,8 +77,12 @@ const App = () => {
 
     const sendMessage = async (event: FormEvent) => {
         event.preventDefault();
-        if (!currentMessageAuthor || !currentMessageText) {
-            alert("Some inputs are empty");
+        if (!currentMessageAuthor) {
+            alert("Author input is empty");
+            return;
+        }
+        if (!currentMessageText) {
+            alert("Text input is empty");
             return;
         }
 
@@ -91,12 +97,17 @@ const App = () => {
 
         setCurrentMessageAuthor("");
         setCurrentMessageText("");
+
+        if (!response.ok) {
+            alert("Send message error");
+            return;
+        }
     };
 
     return (
         <div className="container">
             <MessagesList messages={messages} />
-            <Preloader />
+            <Preloader isActivePreloader={isActivePreloader} />
             <MessageForm
                 authorValue={currentMessageAuthor}
                 textValue={currentMessageText}
