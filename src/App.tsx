@@ -7,12 +7,12 @@ import type { TypeMessage } from "./helpers/types";
 
 const messagesApi: string = "http://146.185.154.90:8000/messages";
 let lastDateTime: string = "";
-let isActivePreloader = true;
 
 const App = () => {
     const [messages, setMessages] = useState<TypeMessage[]>([]);
     const [currentMessageText, setCurrentMessageText] = useState("");
     const [currentMessageAuthor, setCurrentMessageAuthor] = useState("");
+    const [isActivePreloader, setIsActivePreloader] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -24,7 +24,7 @@ const App = () => {
                 if (result.length > 0) {
                     lastDateTime = result[29].datetime;
                 }
-                isActivePreloader = false;
+                setIsActivePreloader(false);
                 scrollToBottom();
             }
         };
@@ -64,14 +64,13 @@ const App = () => {
 
     const getMessages = async (messagesApi: string) => {
         const responseJson = await fetch(messagesApi);
-        const result = await responseJson.json();
-        return result;
+        return await responseJson.json();
     };
 
     const changeFormAuthor = (event: ChangeEvent<HTMLInputElement>) => {
         setCurrentMessageAuthor(event.target.value);
     };
-    const changeFormText = (event: ChangeEvent<HTMLInputElement>) => {
+    const changeFormText = (event: ChangeEvent<HTMLTextAreaElement>) => {
         setCurrentMessageText(event.target.value);
     };
 
@@ -87,27 +86,28 @@ const App = () => {
         }
 
         const data = new URLSearchParams();
-        data.set("message", `${currentMessageText}`);
-        data.set("author", `${currentMessageAuthor}`);
+        data.set("message", currentMessageText);
+        data.set("author", currentMessageAuthor);
 
         const response = await fetch(messagesApi, {
             method: "post",
             body: data,
         });
 
-        setCurrentMessageAuthor("");
-        setCurrentMessageText("");
-
         if (!response.ok) {
             alert("Send message error");
             return;
         }
+
+        setCurrentMessageAuthor("");
+        setCurrentMessageText("");
     };
 
     return (
         <div className="container">
             <MessagesList messages={messages} />
-            <Preloader isActivePreloader={isActivePreloader} />
+            {isActivePreloader && <Preloader />}
+
             <MessageForm
                 authorValue={currentMessageAuthor}
                 textValue={currentMessageText}

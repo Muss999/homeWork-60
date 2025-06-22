@@ -89,7 +89,7 @@
 }
 
 #preloader {
-    display: none;
+    display: flex;
     justify-content: center;
     position: absolute;
     top: 300px;

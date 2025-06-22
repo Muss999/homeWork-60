@@ -1,11 +1,11 @@
-import type { ChangeEventHandler, MouseEventHandler } from "react";
+import type { ChangeEventHandler, FormEventHandler } from "react";
 import "./MessageForm.css";
 interface Props {
     authorValue: string;
     textValue: string;
-    changeFormText: ChangeEventHandler;
-    changeFormAuthor: ChangeEventHandler;
-    sendMessage: MouseEventHandler;
+    changeFormText: ChangeEventHandler<HTMLTextAreaElement>;
+    changeFormAuthor: ChangeEventHandler<HTMLInputElement>;
+    sendMessage: FormEventHandler<HTMLFormElement>;
 }
 const MessageForm = ({
     authorValue,
@@ -15,7 +15,12 @@ const MessageForm = ({
     sendMessage,
 }: Props) => {
     return (
-        <form id="message-form">
+        <form
+            id="message-form"
+            onSubmit={(event) => {
+                sendMessage(event);
+            }}
+        >
             <div className="input-group mb-3">
                 <input
                     type="text"
@@ -35,13 +40,7 @@ const MessageForm = ({
                     value={textValue}
                     onChange={changeFormText}
                 ></textarea>
-                <button
-                    className="btn btn-outline-secondary"
-                    type="submit"
-                    onClick={(event) => {
-                        sendMessage(event);
-                    }}
-                >
+                <button className="btn btn-outline-secondary" type="submit">
                     Send
                 </button>
             </div>
