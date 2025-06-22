@@ -4,3 +4,7 @@ export interface TypeMessage {
     message: string;
     _id: string;
 }
+export interface TypeSendMessage {
+    author: string;
+    message: string;
+}
